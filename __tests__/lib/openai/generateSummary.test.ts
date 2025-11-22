@@ -1,6 +1,6 @@
 import { generateSummary } from '@/lib/openai/generateSummary';
 import { openai } from '@/lib/openai/client';
-import { vi, describe, it, expect, beforeEach, afterEach, type Mock } from 'vitest';
+import { vi, describe, it, expect, afterEach, type Mock } from 'vitest';
 
 // OpenAIクライアントのモック
 vi.mock('@/lib/openai/client', () => ({

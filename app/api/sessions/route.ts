@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { sessionStore } from '@/lib/session/sessionStore';
+import { handleApiError, AppError } from '@/lib/utils/errorHandlers';
 
 export async function POST(req: NextRequest) {
   try {
@@ -7,27 +8,23 @@ export async function POST(req: NextRequest) {
     const { materialId } = body;
 
     if (!materialId) {
-      return NextResponse.json(
-        { error: { code: 'INVALID_REQUEST', message: 'Material ID is required' } },
-        { status: 400 }
-      );
+      throw new AppError('INVALID_REQUEST', 'Material ID is required', 400);
     }
 
     try {
       const session = sessionStore.createSession(materialId);
-      return NextResponse.json({ data: { sessionId: session.sessionId } }, { status: 201 });
-    } catch (e) {
       return NextResponse.json(
-        { error: { code: 'NOT_FOUND', message: 'Material not found' } },
-        { status: 404 }
+        { data: { sessionId: session.sessionId } },
+        { status: 201 }
       );
+    } catch (error) {
+      // Material not found error
+      if (error instanceof Error && error.message === 'Material not found') {
+        throw new AppError('MATERIAL_NOT_FOUND', '教材が見つかりません', 404);
+      }
+      throw error;
     }
-
   } catch (error) {
-    console.error('Session Creation Error:', error);
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: 'セッションの作成中にエラーが発生しました' } },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }

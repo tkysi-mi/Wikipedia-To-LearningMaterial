@@ -14,11 +14,13 @@ interface OpenAIQuizQuestion {
 
 /**
  * Wikipedia記事から○×問題を生成する
- * 
+ *
  * @param articleText 記事の本文
  * @returns 生成された○×問題リスト（10問）
  */
-export async function generateQuestions(articleText: string): AsyncResult<QuizQuestion[], string> {
+export async function generateQuestions(
+  articleText: string
+): AsyncResult<QuizQuestion[], string> {
   if (!articleText) {
     return { success: false, error: '記事本文が空です' };
   }
@@ -71,31 +73,35 @@ ${articleText}`,
         parsed = json.questions;
       } else {
         // キーが不明な場合、値の中に配列があるか探す
-        const arrayValue = Object.values(json).find(v => Array.isArray(v));
+        const arrayValue = Object.values(json).find((v) => Array.isArray(v));
         if (arrayValue) {
           parsed = arrayValue as OpenAIQuizQuestion[];
         } else {
           throw new Error('Invalid JSON structure');
         }
       }
-    } catch (e) {
+    } catch {
       return { success: false, error: 'JSONの解析に失敗しました' };
     }
 
-    const questionsData = Array.isArray(parsed) ? parsed : (parsed as any).questions || [];
+    const questionsData = Array.isArray(parsed)
+      ? parsed
+      : (parsed as { questions: OpenAIQuizQuestion[] }).questions || [];
 
     if (questionsData.length === 0) {
       return { success: false, error: '問題が生成されませんでした' };
     }
 
     // QuizQuestion型に変換
-    const questions: QuizQuestion[] = questionsData.map((q: OpenAIQuizQuestion, index: number) => ({
-      id: randomUUID(),
-      questionText: q.text,
-      correctAnswer: q.correctAnswer,
-      explanation: q.explanation,
-      order: index + 1,
-    }));
+    const questions: QuizQuestion[] = questionsData.map(
+      (q: OpenAIQuizQuestion, index: number) => ({
+        id: randomUUID(),
+        questionText: q.text,
+        correctAnswer: q.correctAnswer,
+        explanation: q.explanation || '',
+        order: index + 1,
+      })
+    );
 
     // 10問に調整（足りない場合はエラー、多い場合は切り捨て）
     if (questions.length < 10) {
@@ -105,7 +111,6 @@ ${articleText}`,
     }
 
     return { success: true, data: questions.slice(0, 10) };
-
   } catch (error) {
     console.error('OpenAI API Error (Questions):', error);
     return { success: false, error: '問題の生成中にエラーが発生しました' };
