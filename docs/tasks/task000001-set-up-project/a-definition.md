@@ -1,16 +1,69 @@
-# タスク定義
+# タスク定義ドキュメント
 
 <!--
-タスクの目的・概要を記述します。
-例: プロジェクトの依存関係をインストールし、開発環境を整える。
+このドキュメントについて:
+  - 格納場所: docs/tasks/task000001-{スラッグ}/a-definition.md
+  - 作成方法: /b-001-CreateTaskDefinition ワークフローで作成
+  - 関連ドキュメント:
+    - b-research.md (リサーチドキュメント)
+    - c-implementation.md (実装タスクリスト)
+
+このドキュメントの目的:
+  - タスクの目的と範囲を明確化
+  - 実装前に関係者間で認識を統一
+  - 受け入れ基準を事前定義
+  - 影響範囲の可視化
+
+更新タイミング:
+  - タスク着手前に作成
+  - 要件変更時に更新
+  - レビュー時に不明点を追記
 -->
 
-## 目的
-- 必要なパッケージをインストール
-- 開発ツール（ESLint, Prettier, Vitest 等）を設定
-- .env ファイルのテンプレート作成
+---
 
-## 受け入れ基準
-- `npm install` が成功し、`node_modules` が生成される
-- `npm run lint` がエラーなしで完了
-- `npm run test` が実行できる
+## 1. 目的
+
+- **依存関係のインストール**: Next.js、TypeScript、Tailwind CSS、ESLint/Prettier、Vitest、GitHub Actions CI など、プロジェクトがビルド・テスト・デプロイできる環境を整える。
+- **ディレクトリ構造の作成**: `docs/project/04-design/02-repository-structure.md` に記載されたフォルダ階層 (`app/`, `components/`, `lib/`, `types/`, `contexts/`, `hooks/`, `__tests__/`, `public/` 等) を実際のリポジトリに作成し、プレースホルダーを配置する。
+- **CI パイプラインの整備**: GitHub Actions で依存関係インストール、Lint、テストが自動実行されるようにする。
+
+---
+
+## 2. ユーザーストーリー一覧
+
+| ストーリーID | ストーリー |
+|--------------|-----------|
+| US-001 | 開発者として、`npm install` で全依存関係を一括取得したい。なぜなら環境構築に時間をかけたくないから。
+| US-002 | CI エンジニアとして、プルリクエスト時に自動で依存関係をインストールし、Lint とテストを実行したい。なぜならコード品質を保証したいから。
+| US-003 | プロジェクトメンテナとして、ディレクトリ構造が設計通りに揃っていることを確認したい。なぜなら新規機能追加時に迷わず作業できるから。
+
+---
+
+## 3. 変更内容一覧
+
+| カテゴリ | 変更内容 |
+|----------|----------|
+| 依存関係 | `package.json` に Next.js、TypeScript、Tailwind CSS、ESLint、Prettier、Vitest を追加。`npm install` / `npm ci` が成功するように設定。
+| ディレクトリ構造 | `app/`, `components/`, `lib/`, `types/`, `contexts/`, `hooks/`, `__tests__/unit/`, `__tests__/integration/`, `public/` を作成し、各フォルダに `README.md` または `.keep` を配置。
+| CI 設定 | `.github/workflows/ci.yml` を作成し、依存関係インストール、Lint、テスト、カバレッジ取得を自動化。
+| ドキュメント | `README.md` にセットアップ手順とディレクトリ構造図（Mermaid）を追記。
+
+---
+
+## 4. 受け入れ基準
+
+- **依存関係インストール**: `npm install` がエラーなく完了し、`node_modules` が生成される。
+- **Lint とテスト**: `npm run lint` と `npm run test` が全て成功する。
+- **ディレクトリ構造**: `docs/project/04-design/02-repository-structure.md` に記載された全フォルダがリポジトリに存在し、プレースホルダーが配置されている。
+- **CI 成功**: GitHub Actions が `ci.yml` を実行し、すべてのジョブが成功する。
+- **ドキュメント更新**: `README.md` に依存関係インストール手順、ディレクトリ構造図、CI の説明が記載されている。
+
+---
+
+## メモ
+
+- 関連 Issue: #123
+- 参考デザイン: https://figma.com/file/...
+- 注意: メール送信は非同期処理で実装する（本タスクでは対象外）。
+- 今後の拡張: UI コンポーネント（shadcn/ui）や API エンドポイントの追加時は、既存ディレクトリ構造に従う。
