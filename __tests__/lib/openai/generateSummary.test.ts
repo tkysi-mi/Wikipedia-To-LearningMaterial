@@ -47,6 +47,9 @@ describe('generateSummary', () => {
             content: expect.stringContaining(articleText),
           }),
         ]),
+      }),
+      expect.objectContaining({
+        timeout: 60000,
       })
     );
   });
