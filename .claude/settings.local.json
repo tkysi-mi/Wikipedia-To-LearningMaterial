@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir /a \"C:\\Users\\Takey\\Desktop\\Wikipedia-To-LearningMaterial\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

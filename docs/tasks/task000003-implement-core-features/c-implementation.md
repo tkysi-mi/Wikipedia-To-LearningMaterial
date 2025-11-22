@@ -180,7 +180,7 @@
 
 ### ステップ
 
-- [ ] **ステップ 3.1:** Wikipedia URL検証ロジックの実装
+- [x] **ステップ 3.1:** Wikipedia URL検証ロジックの実装
   - **成果物:** `lib/wikipedia/validateUrl.ts`
   - **詳細:** 
     - `validateWikipediaUrl(url: string): Result<string, string>` - URL検証
@@ -188,7 +188,7 @@
     - 記事タイトルを抽出して返す
     - エラー時は`{ success: false, error: "有効なWikipedia URLを入力してください" }`
 
-- [ ] **ステップ 3.2:** Wikipedia APIクライアントの実装
+- [x] **ステップ 3.2:** Wikipedia APIクライアントの実装
   - **成果物:** `lib/wikipedia/client.ts`
   - **詳細:** 
     - `fetchArticle(articleTitle: string, lang: 'ja' | 'en'): Promise<{ title: string, text: string }>` - 記事取得
@@ -197,7 +197,7 @@
     - レスポンスからテキストを抽出
     - エラーハンドリング: ネットワークエラー、記事が存在しない場合
 
-- [ ] **ステップ 3.3:** Wikipedia連携のユニットテスト
+- [x] **ステップ 3.3:** Wikipedia連携のユニットテスト
   - **成果物:** `__tests__/lib/wikipedia/validateUrl.test.ts`, `__tests__/lib/wikipedia/client.test.ts`
   - **詳細:** 
     - `validateWikipediaUrl`のテスト(有効なURL、無効なURL、空文字列)
@@ -224,14 +224,14 @@
 
 ### ステップ
 
-- [ ] **ステップ 4.1:** OpenAI クライアントの初期化
+- [x] **ステップ 4.1:** OpenAI クライアントの初期化
   - **成果物:** `lib/openai/client.ts`
   - **詳細:** 
     - OpenAI SDKをインポート
     - `const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY })`
     - エクスポートして他のモジュールで使用
 
-- [ ] **ステップ 4.2:** サマリ生成ロジックの実装
+- [x] **ステップ 4.2:** サマリ生成ロジックの実装
   - **成果物:** `lib/openai/generateSummary.ts`
   - **詳細:** 
     - `generateSummary(articleText: string): Promise<string>` - サマリ生成
@@ -240,7 +240,7 @@
     - タイムアウト: 60秒
     - エラーハンドリング: API障害、レート制限
 
-- [ ] **ステップ 4.3:** ○×問題生成ロジックの実装
+- [x] **ステップ 4.3:** ○×問題生成ロジックの実装
   - **成果物:** `lib/openai/generateQuestions.ts`
   - **詳細:** 
     - `generateQuestions(articleText: string): Promise<QuizQuestion[]>` - ○×問題生成
@@ -250,7 +250,7 @@
     - タイムアウト: 60秒
     - エラーハンドリング: JSON解析エラー、API障害
 
-- [ ] **ステップ 4.4:** 教材生成APIの実装
+- [x] **ステップ 4.4:** 教材生成APIの実装
   - **成果物:** `app/api/materials/route.ts`
   - **詳細:** 
     - POST /api/materials
@@ -264,20 +264,20 @@
     - レスポンス: `{ data: LearningMaterial }`
     - エラーハンドリング: 各ステップでのエラーを適切に処理
 
-- [ ] **ステップ 4.5:** ローディングスピナーコンポーネントの実装
+- [x] **ステップ 4.5:** ローディングスピナーコンポーネントの実装
   - **成果物:** `components/LoadingSpinner.tsx`
   - **詳細:** 
     - shadcn/uiのSpinnerコンポーネントを使用
     - プロップ: `message?: string` - ローディングメッセージ
 
-- [ ] **ステップ 4.6:** エラーメッセージコンポーネントの実装
+- [x] **ステップ 4.6:** エラーメッセージコンポーネントの実装
   - **成果物:** `components/ErrorMessage.tsx`
   - **詳細:** 
     - shadcn/uiのAlertコンポーネントを使用
     - プロップ: `message: string` - エラーメッセージ
     - バリアント: destructive
 
-- [ ] **ステップ 4.7:** URL入力フォームコンポーネントの実装
+- [x] **ステップ 4.7:** URL入力フォームコンポーネントの実装
   - **成果物:** `components/UrlInputForm.tsx`
   - **詳細:** 
     - React Hook Form使用
@@ -285,7 +285,7 @@
     - プロップ: `onSubmit: (url: string) => void`, `isLoading: boolean`
     - shadcn/ui Input, Button使用
 
-- [ ] **ステップ 4.8:** URL入力画面の実装
+- [x] **ステップ 4.8:** URL入力画面の実装
   - **成果物:** `app/page.tsx`(更新)
   - **詳細:** 
     - `UrlInputForm`コンポーネント配置
@@ -294,7 +294,7 @@
     - エラー時は`ErrorMessage`表示
     - 成功時はサマリ表示画面(`/summary`)にリダイレクト
 
-- [ ] **ステップ 4.9:** サマリ表示コンポーネントの実装
+- [x] **ステップ 4.9:** サマリ表示コンポーネントの実装
   - **成果物:** `components/SummaryDisplay.tsx`
   - **詳細:** 
     - プロップ: `summary: string`, `articleTitle: string`
@@ -302,14 +302,13 @@
     - 3行サマリを表示
     - 「○×問題を開始」ボタン
 
-- [ ] **ステップ 4.10:** サマリ表示画面の実装
-  - **成果物:** `app/(auth)/summary/page.tsx`
+- [x] **ステップ 4.10:** サマリ表示画面の実装 (ホーム画面に統合)
+  - **成果物:** `app/(auth)/page.tsx` (更新)
   - **詳細:** 
-    - `SummaryDisplay`コンポーネント配置
-    - 「○×問題を開始」ボタンクリックで`/quiz`にリダイレクト
-    - 教材データはContextから取得
+    - `SummaryDisplay`コンポーネントを条件付きレンダリングで表示
+    - SPAライクな遷移でUXを向上
 
-- [ ] **ステップ 4.11:** OpenAI連携のユニットテスト
+- [x] **ステップ 4.11:** OpenAI連携のユニットテスト
   - **成果物:** `__tests__/lib/openai/generateSummary.test.ts`, `__tests__/lib/openai/generateQuestions.test.ts`
   - **詳細:** 
     - `generateSummary`のテスト(モックレスポンス、エラーケース)
