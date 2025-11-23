@@ -4,8 +4,9 @@ import { fetchArticle } from '@/lib/wikipedia/client';
 import { generateSummary } from '@/lib/openai/generateSummary';
 import { generateQuestions } from '@/lib/openai/generateQuestions';
 import { sessionStore } from '@/lib/session/sessionStore';
-import type { LearningMaterial } from '@/types/learning-material';
 import { randomUUID } from 'crypto';
+import type { LearningMaterial } from '@/types/learning-material';
+import { handleApiError, AppError } from '@/lib/utils/errorHandlers';
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,9 +16,10 @@ export async function POST(req: NextRequest) {
     // 1. URL検証
     const validationResult = validateWikipediaUrl(wikipediaUrl);
     if (!validationResult.success) {
-      return NextResponse.json(
-        { error: { code: 'INVALID_URL', message: validationResult.error } },
-        { status: 400 }
+      throw new AppError(
+        'INVALID_REQUEST',
+        validationResult.error || 'Invalid URL',
+        400
       );
     }
 
@@ -26,9 +28,10 @@ export async function POST(req: NextRequest) {
     // 2. Wikipedia記事取得
     const articleResult = await fetchArticle(title, lang);
     if (!articleResult.success) {
-      return NextResponse.json(
-        { error: { code: 'FETCH_ERROR', message: articleResult.error } },
-        { status: 500 } // または404
+      throw new AppError(
+        'INTERNAL_ERROR',
+        articleResult.error || 'Failed to fetch article',
+        500
       );
     }
 
@@ -37,18 +40,20 @@ export async function POST(req: NextRequest) {
     // 3. サマリ生成
     const summaryResult = await generateSummary(articleText);
     if (!summaryResult.success) {
-      return NextResponse.json(
-        { error: { code: 'GENERATION_ERROR', message: summaryResult.error } },
-        { status: 500 }
+      throw new AppError(
+        'INTERNAL_ERROR',
+        summaryResult.error || 'Failed to generate summary',
+        500
       );
     }
 
     // 4. ○×問題生成
     const questionsResult = await generateQuestions(articleText);
     if (!questionsResult.success) {
-      return NextResponse.json(
-        { error: { code: 'GENERATION_ERROR', message: questionsResult.error } },
-        { status: 500 }
+      throw new AppError(
+        'INTERNAL_ERROR',
+        questionsResult.error || 'Failed to generate questions',
+        500
       );
     }
 
@@ -67,12 +72,7 @@ export async function POST(req: NextRequest) {
     sessionStore.saveMaterial(material);
 
     return NextResponse.json({ data: material }, { status: 201 });
-
   } catch (error) {
-    console.error('Material Generation Error:', error);
-    return NextResponse.json(
-      { error: { code: 'INTERNAL_ERROR', message: '教材の生成中にエラーが発生しました' } },
-      { status: 500 }
-    );
+    return handleApiError(error);
   }
 }
