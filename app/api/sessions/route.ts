@@ -14,7 +14,12 @@ export async function POST(req: NextRequest) {
     try {
       const session = sessionStore.createSession(materialId);
       return NextResponse.json(
-        { data: { sessionId: session.sessionId } },
+        {
+          data: {
+            sessionId: session.sessionId,
+            questions: session.questions,
+          },
+        },
         { status: 201 }
       );
     } catch (error) {

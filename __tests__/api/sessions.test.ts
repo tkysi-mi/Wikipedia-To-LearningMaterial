@@ -48,10 +48,10 @@ describe('Sessions API', () => {
       const response = await createSession(request);
       const data = await response.json();
 
-      expect(response.status).toBe(200);
-      expect(data).toHaveProperty('sessionId');
-      expect(data).toHaveProperty('questions');
-      expect(data.questions).toHaveLength(2);
+      expect(response.status).toBe(201);
+      expect(data.data).toHaveProperty('sessionId');
+      expect(data.data).toHaveProperty('questions');
+      expect(data.data.questions).toHaveLength(2);
     });
 
     it('should return 404 with non-existent material ID', async () => {
@@ -80,7 +80,7 @@ describe('Sessions API', () => {
           body: JSON.stringify({
             sessionId: session.sessionId,
             questionId: 'q1',
-            userChoice: true,
+            userAnswer: true,
           }),
         }
       );
@@ -91,8 +91,8 @@ describe('Sessions API', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveProperty('isCorrect', true);
-      expect(data).toHaveProperty('explanation');
+      expect(data.data).toHaveProperty('isCorrect', true);
+      expect(data.data).toHaveProperty('correctAnswer');
     });
 
     it('should return 404 with non-existent session ID', async () => {
@@ -103,7 +103,7 @@ describe('Sessions API', () => {
           body: JSON.stringify({
             sessionId: 'non-existent-id',
             questionId: 'q1',
-            userChoice: true,
+            userAnswer: true,
           }),
         }
       );
@@ -149,9 +149,9 @@ describe('Sessions API', () => {
       const data = await response.json();
 
       expect(response.status).toBe(200);
-      expect(data).toHaveProperty('correctCount', 1);
-      expect(data).toHaveProperty('incorrectCount', 1);
-      expect(data).toHaveProperty('correctRate', 50);
+      expect(data.data).toHaveProperty('correctCount', 1);
+      expect(data.data).toHaveProperty('totalCount', 2);
+      expect(data.data).toHaveProperty('correctRate', 50);
     });
 
     it('should return 404 with non-existent session ID', async () => {

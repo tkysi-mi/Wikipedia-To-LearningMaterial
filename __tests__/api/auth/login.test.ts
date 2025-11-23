@@ -22,7 +22,7 @@ describe('POST /api/auth/login', () => {
     const data = await response.json();
 
     expect(response.status).toBe(200);
-    expect(data).toHaveProperty('success', true);
+    expect(data.data).toHaveProperty('authenticated', true);
   });
 
   it('should return 401 with incorrect password', async () => {

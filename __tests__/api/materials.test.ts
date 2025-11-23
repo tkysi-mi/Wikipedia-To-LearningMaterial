@@ -54,11 +54,11 @@ describe('POST /api/materials', () => {
     const response = await POST(request);
     const data = await response.json();
 
-    expect(response.status).toBe(200);
-    expect(data).toHaveProperty('id');
-    expect(data).toHaveProperty('summary');
-    expect(data).toHaveProperty('questions');
-    expect(data.questions).toHaveLength(10);
+    expect(response.status).toBe(201);
+    expect(data.data).toHaveProperty('id');
+    expect(data.data).toHaveProperty('summary');
+    expect(data.data).toHaveProperty('questions');
+    expect(data.data.questions).toHaveLength(10);
   });
 
   it('should return 400 with invalid URL', async () => {
