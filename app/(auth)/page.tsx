@@ -59,7 +59,9 @@ export default function HomePage() {
             Wikipedia学習教材生成
           </h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Wikipediaの記事をAIが要約し、理解度確認クイズを作成します。<br>効率的な学習体験を始めましょう。
+            Wikipediaの記事をAIが要約し、理解度確認クイズを作成します。
+            <br />
+            効率的な学習体験を始めましょう。
           </p>
         </div>
       )}
