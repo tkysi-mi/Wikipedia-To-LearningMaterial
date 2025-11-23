@@ -52,15 +52,18 @@
 このタスクが完了すると、以下の価値を提供する:
 
 **ユーザー(社会人・自習者)への価値**:
+
 - Wikipedia記事から自動生成された○×問題で能動的に学習できる
 - 3行サマリで記事の概要を素早く把握できる
 - 即座のフィードバックで理解度を確認し、記憶に定着させられる
 - 正答数・正答率で学習の成果を確認し、達成感を得られる
 
 **システム管理者への価値**:
+
 - ベーシック認証で不特定多数のアクセスを防ぎ、OpenAI APIの不正利用によるコスト増加を回避できる
 
 **プロジェクトへの価値**:
+
 - デモアプリケーションとして動作可能な状態になる
 - 要件定義で定めたすべてのユーザーストーリーが実装される
 - 設計ドキュメント(技術スタック、アーキテクチャ、API仕様、データ構造)の妥当性を検証できる
@@ -71,16 +74,16 @@
 
 このタスクで実装するユーザーストーリー(既存ドキュメント `docs/project/01-requirements/05-user-stories.md` より):
 
-| ストーリーID | ストーリー |
-|--------------|-----------|
-| US-001 | 社会人として、WikipediaのURLを入力したい、なぜなら学習したいトピックの記事を選択し、教材を生成したいから |
-| US-002 | 社会人として、Wikipedia記事の3行サマリを読みたい、なぜなら記事の概要を素早く把握し、学習価値があるか判断したいから |
-| US-003 | 社会人として、○×問題を1問ずつ解きたい、なぜなら記事を注意深く読むモチベーションを得て、能動的な学習体験をしたいから |
-| US-004 | 社会人として、回答後に正解/不正解のフィードバックを即座に得たい、なぜなら自分の理解度を確認し、記憶に定着させたいから |
-| US-005 | 社会人として、全問終了後に正答数と正答率を見たい、なぜなら学習の成果を確認し、達成感を得たいから |
-| US-006 | 社会人として、別のWikipedia記事でも学習したい、なぜなら様々なトピックで知識を広げたいから |
-| US-007 | システム管理者として、不特定多数のアクセスを防ぎたい、なぜならOpenAI APIの不正利用によるコスト増加を避けたいから |
-| US-008 | 社会人として、エラーが発生した際に適切なメッセージを見たい、なぜなら何が問題なのかを理解し、適切に対処したいから |
+| ストーリーID | ストーリー                                                                                                            |
+| ------------ | --------------------------------------------------------------------------------------------------------------------- |
+| US-001       | 社会人として、WikipediaのURLを入力したい、なぜなら学習したいトピックの記事を選択し、教材を生成したいから              |
+| US-002       | 社会人として、Wikipedia記事の3行サマリを読みたい、なぜなら記事の概要を素早く把握し、学習価値があるか判断したいから    |
+| US-003       | 社会人として、○×問題を1問ずつ解きたい、なぜなら記事を注意深く読むモチベーションを得て、能動的な学習体験をしたいから   |
+| US-004       | 社会人として、回答後に正解/不正解のフィードバックを即座に得たい、なぜなら自分の理解度を確認し、記憶に定着させたいから |
+| US-005       | 社会人として、全問終了後に正答数と正答率を見たい、なぜなら学習の成果を確認し、達成感を得たいから                      |
+| US-006       | 社会人として、別のWikipedia記事でも学習したい、なぜなら様々なトピックで知識を広げたいから                             |
+| US-007       | システム管理者として、不特定多数のアクセスを防ぎたい、なぜならOpenAI APIの不正利用によるコスト増加を避けたいから      |
+| US-008       | 社会人として、エラーが発生した際に適切なメッセージを見たい、なぜなら何が問題なのかを理解し、適切に対処したいから      |
 
 ---
 
@@ -89,23 +92,28 @@
 ### 1. 認証機能 (US-007)
 
 #### ビジネスロジック
+
 - **新規**: `lib/auth/basicAuth.ts` - ベーシック認証ロジック実装
 - **新規**: `lib/auth/middleware.ts` - 認証ミドルウェア実装
 
 #### API
+
 - **新規**: `app/api/auth/login/route.ts` - POST /api/auth/login (パスワード検証、Cookie発行)
 - **新規**: `app/api/auth/logout/route.ts` - POST /api/auth/logout (Cookie削除)
 - **新規**: `app/api/auth/me/route.ts` - GET /api/auth/me (認証状態確認)
 
 #### 画面
+
 - **新規**: `app/login/page.tsx` - ログインページ(パスワード入力フォーム)
 - **新規**: `app/(auth)/layout.tsx` - 認証済みページ共通レイアウト(認証チェック)
 
 #### 状態管理
+
 - **新規**: `contexts/AuthContext.tsx` - 認証状態管理Context
 - **新規**: `hooks/useAuth.ts` - 認証フック
 
 #### 型定義
+
 - **新規**: `types/auth.ts` - AuthSession型定義
 
 ---
@@ -113,10 +121,12 @@
 ### 2. Wikipedia API連携 (US-001)
 
 #### ビジネスロジック
+
 - **新規**: `lib/wikipedia/client.ts` - Wikipedia API呼び出し
 - **新規**: `lib/wikipedia/validateUrl.ts` - URL検証ロジック
 
 #### 型定義
+
 - **更新**: `types/learning-material.ts` - LearningMaterial型にwikipediaUrl, articleTitle, articleText追加
 
 ---
@@ -124,6 +134,7 @@
 ### 3. OpenAI API連携 (US-002, US-003)
 
 #### ビジネスロジック
+
 - **新規**: `lib/openai/client.ts` - OpenAI API初期化
 - **新規**: `lib/openai/generateSummary.ts` - サマリ生成ロジック
 - **新規**: `lib/openai/generateQuestions.ts` - ○×問題生成ロジック
@@ -133,13 +144,16 @@
 ### 4. 教材生成機能 (US-001, US-002)
 
 #### API
+
 - **新規**: `app/api/materials/route.ts` - POST /api/materials (Wikipedia URL受信、教材生成)
 
 #### 画面
+
 - **更新**: `app/page.tsx` - URL入力画面(入力フォーム、送信ボタン、エラー表示)
 - **新規**: `app/(auth)/summary/page.tsx` - サマリ表示画面(3行サマリ、「問題を開始」ボタン)
 
 #### UIコンポーネント
+
 - **新規**: `components/UrlInputForm.tsx` - URL入力フォーム
 - **新規**: `components/SummaryDisplay.tsx` - サマリ表示コンポーネント
 - **新規**: `components/LoadingSpinner.tsx` - ローディング表示
@@ -149,26 +163,32 @@
 ### 5. 学習セッション機能 (US-003, US-004, US-005, US-006)
 
 #### ビジネスロジック
+
 - **新規**: `lib/session/sessionStore.ts` - インメモリセッション管理
 
 #### API
+
 - **新規**: `app/api/sessions/route.ts` - POST /api/sessions (セッション開始)
 - **新規**: `app/api/sessions/[id]/answers/route.ts` - POST /api/sessions/{id}/answers (回答送信)
 - **新規**: `app/api/sessions/[id]/result/route.ts` - GET /api/sessions/{id}/result (結果取得)
 
 #### 画面
+
 - **新規**: `app/(auth)/quiz/page.tsx` - ○×問題回答画面(○×問題表示、○×ボタン、フィードバック表示)
 - **新規**: `app/(auth)/results/page.tsx` - 結果表示画面(正答数、正答率、「別の記事で試す」ボタン)
 
 #### UIコンポーネント
+
 - **新規**: `components/QuizCard.tsx` - ○×問題表示カード
 - **新規**: `components/ResultsDisplay.tsx` - 結果表示コンポーネント
 
 #### 状態管理
+
 - **新規**: `contexts/QuizContext.tsx` - ○×問題セッション状態管理Context
 - **新規**: `hooks/useQuiz.ts` - ○×問題管理フック
 
 #### 型定義
+
 - **更新**: `types/learning-session.ts` - LearningSession, Answer型定義
 
 ---
@@ -176,10 +196,12 @@
 ### 6. エラーハンドリング (US-008)
 
 #### ユーティリティ
+
 - **新規**: `lib/utils/errorHandlers.ts` - エラーハンドリング関数
 - **新規**: `lib/utils/validators.ts` - バリデーション関数
 
 #### UIコンポーネント
+
 - **新規**: `components/ErrorMessage.tsx` - エラーメッセージ表示コンポーネント
 
 ---
@@ -198,12 +220,14 @@
 ### 正常系
 
 #### 認証フロー
+
 - [ ] ログインページでパスワードを入力し、正しいパスワードで認証成功する
 - [ ] 認証成功後、URL入力画面にリダイレクトされる
 - [ ] 認証済みユーザーは全ての機能にアクセスできる
 - [ ] ログアウトボタンをクリックすると、ログインページにリダイレクトされる
 
 #### 教材生成フロー
+
 - [ ] URL入力画面でWikipedia URLを入力し、送信ボタンをクリックする
 - [ ] Wikipedia APIから記事テキストが正常に取得される
 - [ ] OpenAI APIで3行サマリが生成される
@@ -212,6 +236,7 @@
 - [ ] 「○×問題を開始」ボタンが表示される
 
 #### 学習セッションフロー
+
 - [ ] 「○×問題を開始」ボタンをクリックすると、○×問題回答画面に遷移する
 - [ ] 1問目が表示され、現在の○×問題番号(1/10)が表示される
 - [ ] ○ボタンまたは×ボタンをクリックすると、回答が送信される
@@ -226,20 +251,24 @@
 ### 異常系・エラーケース
 
 #### 認証エラー
+
 - [ ] 誤ったパスワードを入力すると、「パスワードが間違っています」エラーメッセージが表示される
 - [ ] 未認証ユーザーが保護されたページにアクセスすると、ログインページにリダイレクトされる
 
 #### URL検証エラー
+
 - [ ] 無効なURL(Wikipedia以外)を入力すると、「有効なWikipedia URLを入力してください」エラーメッセージが表示される
 - [ ] 空のURLを送信すると、「URLを入力してください」エラーメッセージが表示される
 
 #### API呼び出しエラー
+
 - [ ] Wikipedia API呼び出しが失敗すると、「記事の取得に失敗しました。URLを確認してください」エラーメッセージが表示される
 - [ ] OpenAI API呼び出しが失敗すると、「教材の生成に失敗しました。しばらく待ってから再試行してください」エラーメッセージが表示される
 
 ### テスト・品質
 
 #### ユニットテスト
+
 - [ ] `lib/auth/basicAuth.ts` のユニットテストが通る
 - [ ] `lib/wikipedia/validateUrl.ts` のユニットテストが通る
 - [ ] `lib/openai/generateSummary.ts` のユニットテストが通る
@@ -247,12 +276,15 @@
 - [ ] `lib/session/sessionStore.ts` のユニットテストが通る
 
 #### 統合テスト
+
 - [ ] API Routes(`/api/auth/login`, `/api/materials`, `/api/sessions`)の統合テストが通る
 
 #### E2Eテスト(オプション)
+
 - [ ] ログインから教材生成、学習セッション、結果表示までの一連のフローがE2Eテストで検証される
 
 #### ビルド・デプロイ
+
 - [ ] `npm run build` がエラーなく完了する
 - [ ] `npm run lint` がエラーなく完了する
 - [ ] `npm run test` が全テストをパスする
@@ -278,11 +310,13 @@
 ## 制約条件
 
 ### 技術的制約
+
 - **データベース不使用**: インメモリのみでデータ管理(永続化なし)
 - **同時接続数**: 2-3人想定(スケーラビリティは考慮しない)
 - **デモ用途**: 本番環境レベルのセキュリティは不要
 
 ### スコープ外
+
 - ユーザー管理機能(複数ユーザー対応)
 - 学習履歴の永続化
 - 高可用性・冗長化
@@ -293,6 +327,7 @@
 ## 参考資料
 
 ### プロジェクトドキュメント
+
 - [ユーザーストーリー](file:///c:/Users/Takey/Desktop/Wikipedia-To-LearningMaterial/docs/project/01-requirements/05-user-stories.md)
 - [技術スタック](file:///c:/Users/Takey/Desktop/Wikipedia-To-LearningMaterial/docs/project/04-design/01-tech-stack.md)
 - [リポジトリ構造](file:///c:/Users/Takey/Desktop/Wikipedia-To-LearningMaterial/docs/project/04-design/02-repository-structure.md)
@@ -301,6 +336,7 @@
 - [アーキテクチャ](file:///c:/Users/Takey/Desktop/Wikipedia-To-LearningMaterial/docs/project/04-design/06-architecture.md)
 
 ### 外部リソース
+
 - [Wikipedia API Documentation](https://www.mediawiki.org/wiki/API:Main_page)
 - [OpenAI API Documentation](https://platform.openai.com/docs/api-reference)
 - [Next.js Documentation](https://nextjs.org/docs)
@@ -333,10 +369,79 @@
 7. **フェーズ7: テスト・検証**
    - ユニットテスト、統合テスト、E2Eテスト
 
-### 注意事項
+---
 
-- **インメモリ管理**: セッションデータはサーバー再起動で消失する(仕様)
-- **OpenAI APIコスト**: デモ用途のため、レート制限は実装しない
-- **エラーハンドリング**: ユーザーフレンドリーなメッセージを心がける
-- **型安全性**: TypeScriptで厳密な型定義を維持する
-。
+## 実装結果
+
+**実装日**: 2025-11-22
+
+**実装内容**:
+
+- 全7フェーズの実装完了（基盤セットアップ、認証、Wikipedia API連携、OpenAI API連携、学習セッション、エラーハンドリング、テスト）
+- 実装ファイル数: 50+ファイル（APIエンドポイント、ビジネスロジック、UIコンポーネント、Context、型定義、テスト）
+- 8つのユーザーストーリー（US-001〜US-008）すべて実装完了
+- 統合テスト、E2Eテスト完了
+- Lintエラー0、ビルド成功
+
+**主な実装物**:
+
+**認証機能**:
+
+- `app/api/auth/login/route.ts`, `app/api/auth/logout/route.ts`, `app/api/auth/me/route.ts`
+- `contexts/AuthContext.tsx`, `app/login/page.tsx`
+
+**Wikipedia API連携**:
+
+- `lib/wikipedia/client.ts`, `lib/wikipedia/validateUrl.ts`
+
+**OpenAI API連携**:
+
+- `lib/openai/client.ts`, `lib/openai/generateSummary.ts`, `lib/openai/generateQuestions.ts`
+
+**教材生成**:
+
+- `app/api/materials/route.ts`
+- `components/UrlInputForm.tsx`, `components/SummaryDisplay.tsx`
+
+**学習セッション**:
+
+- `lib/session/sessionStore.ts`
+- `app/api/sessions/route.ts`, `app/api/sessions/[id]/answers/route.ts`, `app/api/sessions/[id]/result/route.ts`
+- `components/QuizCard.tsx`, `components/ResultsDisplay.tsx`
+- `contexts/QuizContext.tsx`
+
+**エラーハンドリング**:
+
+- `lib/utils/errorHandlers.ts`, `lib/utils/validators.ts`
+- `components/ErrorMessage.tsx`, `components/LoadingSpinner.tsx`
+
+**検証結果**:
+
+- ✅ 全受け入れ基準を満たしている（正常系、異常系、テスト、パフォーマンス、セキュリティ）
+- ✅ ユニットテスト: 全通過
+- ✅ 統合テスト: 全通過
+- ✅ E2Eテスト: ログインから結果表示まで全フロー検証済み
+- ✅ `npm run build`: 成功
+- ✅ `npm run lint`: エラーなし
+- ❌ Railwayへのデプロイ: 未完了（task000004で実施予定）
+
+**実装時の技術的決定**:
+
+1. **shadcn/ui 導入**: 当初計画にはなかったが、UI の一貫性と開発効率のため導入
+2. **認証レイアウト分離**: `app/(auth)/layout.tsx` で認証済みページを分離し、認証チェックを一元化
+3. **SPA風遷移**: サマリ表示をホーム画面に統合し、ページ遷移を減らしてUX向上
+4. **環境変数管理**: `.env.local` と `.env.example` で機密情報を分離管理
+5. **エラーハンドリング統一**: `lib/utils/errorHandlers.ts` で統一的なエラー処理
+
+**変更差異**:
+
+- **フェーズ4.10**: サマリ表示画面を独立ページ（`/summary`）からホーム画面（`/`）への条件付きレンダリングに変更（UX改善）
+- **フェーズ7.5**: Railwayデプロイは別タスク（task000004）に分離
+
+---
+
+## メモ
+
+- 全ての計画ドキュメント（要件、ドメインモデル、API仕様、データ構造、アーキテクチャ）の妥当性を実装を通じて検証できた
+- インメモリ管理の制約によりサーバー再起動でデータ消失するが、デモ用途として許容
+- OpenAI APIのレスポンス時間（20-30秒）が想定通りで、ローディングスピナーで UX をカバー

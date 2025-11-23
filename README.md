@@ -105,26 +105,74 @@ npm start
 │   └── login/             # ログインページ
 ├── components/            # Reactコンポーネント
 │   ├── ui/               # shadcn/ui コンポーネント
-│   ├── ErrorMessage.tsx
-│   ├── LoadingSpinner.tsx
-│   ├── SummaryDisplay.tsx
-│   └── UrlInputForm.tsx
+│   └── *.tsx             # カスタムコンポーネント
 ├── contexts/             # React Context
-│   └── AuthContext.tsx
 ├── lib/                  # ビジネスロジック
 │   ├── openai/          # OpenAI API連携
 │   ├── wikipedia/       # Wikipedia API連携
+│   ├── session/         # セッション管理
 │   └── utils/           # ユーティリティ
 ├── types/               # TypeScript型定義
-│   ├── common.ts
-│   ├── learning-material.ts
-│   └── learning-session.ts
 ├── __tests__/           # テスト
 ├── docs/                # プロジェクトドキュメント
 │   ├── project/         # 要件定義・設計ドキュメント
 │   └── tasks/           # タスク管理ドキュメント
 └── public/              # 静的ファイル
 ```
+
+## 使い方
+
+### 1. ログイン
+
+- 設定したパスワードを入力してログイン
+- 認証成功後、教材生成画面に遷移します
+
+### 2. Wikipedia URL入力
+
+- 日本語または英語のWikipedia記事URLを入力
+- 例: `https://ja.wikipedia.org/wiki/人工知能`
+- 「スタート」ボタンをクリック
+
+### 3. サマリ生成
+
+- AIが記事を3行で要約（処理に20-30秒かかります）
+- ローディングスピナーが表示されます
+
+### 4. サマリ表示
+
+- 記事のタイトルと3行サマリが表示されます
+- 「○×問題を開始」ボタンが表示されます
+
+### 5. ○×問題回答
+
+- 10問の○×問題が1問ずつ表示されます
+- ○または×をクリックして回答
+- 回答後、即座に正解/不正解のフィードバックが表示されます
+- 「次へ」ボタンで次の問題に進みます
+
+### 6. 結果表示
+
+- 全10問終了後、正答数と正答率が表示されます
+- 「別の記事で試す」ボタンで新しい学習セッションを開始できます
+
+## 実装状況
+
+✅ **実装完了**（2025-11-22）:
+
+- ベーシック認証（ログイン・ログアウト）
+- Wikipedia URL入力・検証
+- 3行サマリ生成（OpenAI API）
+- 10問の○×問題生成（OpenAI API）
+- ○×問題回答・即時フィードバック
+- 正答数・正答率表示
+- エラーハンドリング
+- ローディング表示
+
+⏳ **未実装**:
+
+- データベース導入（学習履歴の永続化）
+- ユーザー管理（複数ユーザー対応）
+- モバイルアプリ対応
 
 ## ドキュメント
 
@@ -133,6 +181,7 @@ npm start
 ### 要件定義
 
 - [システム概要](docs/project/01-requirements/01-system-overview.md)
+- [実装済み機能一覧](docs/project/01-requirements/02-features-implemented.md)
 - [ユーザーストーリー](docs/project/01-requirements/05-user-stories.md)
 
 ### 設計
@@ -141,20 +190,13 @@ npm start
 - [リポジトリ構造](docs/project/04-design/02-repository-structure.md)
 - [データ構造](docs/project/04-design/04-data-structures.md)
 - [API仕様](docs/project/04-design/05-api-spec.md)
+- [アーキテクチャ](docs/project/04-design/06-architecture.md)
 
 ### タスク管理
 
 - [Task 000001: プロジェクトセットアップ](docs/tasks/task000001-set-up-project/)
+- [Task 000002: API仕様定義](docs/tasks/task000002-define-api-spec/)
 - [Task 000003: コア機能実装](docs/tasks/task000003-implement-core-features/)
-
-## 使い方（現在の機能）
-
-1. **ログイン**: 設定したパスワードでログイン
-2. **Wikipedia URL入力**: 日本語または英語のWikipedia記事URLを入力
-3. **サマリ生成**: AIが記事を3行で要約（処理に20-30秒かかります）
-4. **サマリ表示**: 記事のタイトルとサマリが表示されます
-
-> **注**: ○×問題機能は現在実装中です（Phase 5）
 
 ## ライセンス
 
