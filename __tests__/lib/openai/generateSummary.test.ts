@@ -36,11 +36,13 @@ describe('generateSummary', () => {
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data).toBe('Summary line 1\nSummary line 2\nSummary line 3');
+      expect(result.data).toBe(
+        'Summary line 1\nSummary line 2\nSummary line 3'
+      );
     }
     expect(openai.chat.completions.create).toHaveBeenCalledWith(
       expect.objectContaining({
-        model: 'gpt-4o-mini',
+        model: 'gpt-5-mini-2025-08-07',
         messages: expect.arrayContaining([
           expect.objectContaining({
             role: 'user',
@@ -55,7 +57,9 @@ describe('generateSummary', () => {
   });
 
   it('should return error when API fails', async () => {
-    (openai.chat.completions.create as Mock).mockRejectedValue(new Error('API Error'));
+    (openai.chat.completions.create as Mock).mockRejectedValue(
+      new Error('API Error')
+    );
 
     const result = await generateSummary('text');
 

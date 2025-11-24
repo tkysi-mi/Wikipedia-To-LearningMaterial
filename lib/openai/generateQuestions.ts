@@ -2,6 +2,8 @@ import { openai } from '@/lib/openai/client';
 import type { AsyncResult } from '@/types/utils';
 import type { QuizQuestion } from '@/types/learning-material';
 import { randomUUID } from 'crypto';
+import * as fs from 'fs';
+import * as path from 'path';
 
 /**
  * OpenAIからのレスポンス形式
@@ -28,21 +30,30 @@ export async function generateQuestions(
   try {
     const response = await openai.chat.completions.create(
       {
-        model: 'gpt-4o-mini',
+        model: 'gpt-5-mini-2025-08-07',
         messages: [
           {
             role: 'user',
-            content: `以下のWikipedia記事から10問の○×問題を生成してください。JSON形式で返してください。
+            content: `以下のWikipedia記事を基に、読者が楽しめる興味深い○×問題を10問作成してください。JSON形式で返してください。
 必ず以下のJSONフォーマットを守ってください。配列で返してください。
 
+要件:
+1. 記事の中から、単なる日付や数値の暗記ではなく、読者が「へぇ」と思うような意外性や興味深い事実（トリビア）をピックアップして問題にしてください。
+2. 10問中2〜3問は、記事のトピックに関連しそうだが「記事には書かれていない」または「事実とは異なる」内容（いかにもありそうなフェイク）を混ぜ、正解を「false」としてください。
+3. 解説は「です・ます」調で、なぜその答えになるのかを記事の内容に基づいて補足し、読者の学びになるようにしてください。
+4. correctAnswerは文字列ではなく、必ずブール値（true または false）にしてください。
+5. 問題文や解説にマークダウンの太字（**...**）などの装飾は使用しないでください。
+
 フォーマット:
-[
-  {
-    "text": "問題文",
-    "correctAnswer": true,
-    "explanation": "解説（任意）"
-  }
-]
+{
+  "questions": [
+    {
+      "text": "問題文",
+      "correctAnswer": true,
+      "explanation": "解説"
+    }
+  ]
+}
 
 記事本文:
 ${articleText}`,
@@ -64,7 +75,16 @@ ${articleText}`,
     // JSONパース
     let parsed: { questions: OpenAIQuizQuestion[] } | OpenAIQuizQuestion[];
     try {
-      const json = JSON.parse(content);
+      // Markdownのコードブロックが含まれている場合は削除する
+      const cleanContent = content
+        .replace(/```json\n?/g, '')
+        .replace(/```\n?/g, '')
+        .trim();
+      console.log('Clean Content:', cleanContent); // Debug log
+
+      const json = JSON.parse(cleanContent);
+      console.log('Parsed JSON keys:', Object.keys(json)); // Debug log
+
       // response_format: { type: 'json_object' } の場合、通常はルートオブジェクトが必要
       // プロンプトで配列を要求しても、{"questions": [...]} のようにラップされることがあるため柔軟に対応
       if (Array.isArray(json)) {
@@ -77,10 +97,29 @@ ${articleText}`,
         if (arrayValue) {
           parsed = arrayValue as OpenAIQuizQuestion[];
         } else {
-          throw new Error('Invalid JSON structure');
+          console.error('Invalid JSON structure. Keys:', Object.keys(json));
+          throw new Error(
+            `Invalid JSON structure. Keys: ${Object.keys(json).join(', ')}`
+          );
         }
       }
-    } catch {
+    } catch (e) {
+      console.error('JSON Parse Error:', e);
+      console.error('Raw Content:', content);
+
+      try {
+        const logPath = path.join(process.cwd(), 'debug_error.log');
+        fs.writeFileSync(
+          logPath,
+          `Error: ${e}\n\nRaw Content:\n${content}\n\nClean Content:\n${content
+            ?.replace(/```json\n?/g, '')
+            .replace(/```\n?/g, '')
+            .trim()}`
+        );
+      } catch (writeErr) {
+        console.error('Failed to write debug log:', writeErr);
+      }
+
       return { success: false, error: 'JSONの解析に失敗しました' };
     }
 

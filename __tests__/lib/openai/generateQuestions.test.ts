@@ -23,7 +23,7 @@ describe('generateQuestions', () => {
       { text: 'Q1', correctAnswer: true, explanation: 'Exp1' },
       { text: 'Q2', correctAnswer: false, explanation: 'Exp2' },
     ];
-    
+
     const mockResponse = {
       choices: [
         {
@@ -50,10 +50,8 @@ describe('generateQuestions', () => {
   });
 
   it('should handle array response format', async () => {
-    const mockQuestions = [
-      { text: 'Q1', correctAnswer: true },
-    ];
-    
+    const mockQuestions = [{ text: 'Q1', correctAnswer: true }];
+
     const mockResponse = {
       choices: [
         {
@@ -96,7 +94,9 @@ describe('generateQuestions', () => {
   });
 
   it('should return error when API fails', async () => {
-    (openai.chat.completions.create as Mock).mockRejectedValue(new Error('API Error'));
+    (openai.chat.completions.create as Mock).mockRejectedValue(
+      new Error('API Error')
+    );
 
     const result = await generateQuestions('text');
 

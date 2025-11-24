@@ -37,8 +37,12 @@ export async function POST(req: NextRequest) {
 
     const { title: articleTitle, text: articleText } = articleResult.data;
 
-    // 3. サマリ生成
-    const summaryResult = await generateSummary(articleText);
+    // 3. サマリ生成と○×問題生成を並列実行
+    const [summaryResult, questionsResult] = await Promise.all([
+      generateSummary(articleText),
+      generateQuestions(articleText),
+    ]);
+
     if (!summaryResult.success) {
       throw new AppError(
         'INTERNAL_ERROR',
@@ -47,8 +51,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 4. ○×問題生成
-    const questionsResult = await generateQuestions(articleText);
     if (!questionsResult.success) {
       throw new AppError(
         'INTERNAL_ERROR',

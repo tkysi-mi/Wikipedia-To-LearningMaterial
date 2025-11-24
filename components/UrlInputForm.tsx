@@ -30,30 +30,30 @@ export function UrlInputForm({
 
   return (
     <div className="flex w-full justify-center px-4">
-      <Card className="w-full max-w-2xl border-none shadow-lg ring-1 ring-black/5 overflow-hidden">
-        <CardHeader className="bg-muted/30 pb-6 pt-8">
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-2">
+      <Card className="w-full max-w-2xl border-none shadow-xl shadow-black/5 ring-1 ring-black/5 overflow-hidden bg-card/50 backdrop-blur-sm">
+        <CardHeader className="bg-muted/30 pb-8 pt-10">
+          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4 ring-4 ring-background">
             <LinkIcon className="h-8 w-8 text-primary" />
           </div>
-          <div className="text-center space-y-1">
-            <h3 className="text-lg font-semibold text-foreground">
+          <div className="text-center space-y-2">
+            <h3 className="text-xl font-bold text-foreground tracking-tight">
               学習を開始
             </h3>
-            <p className="text-sm text-muted-foreground">
-              WikipediaのURLを入力してください
+            <p className="text-muted-foreground text-balance max-w-sm mx-auto">
+              WikipediaのURLを入力して、AIによる要約とクイズ生成を開始します
             </p>
           </div>
         </CardHeader>
-        <CardContent className="p-6 sm:p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="space-y-2">
+        <CardContent className="p-6 sm:p-10">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            <div className="space-y-3">
               <Label
                 htmlFor="url"
-                className="text-sm font-medium text-foreground/80"
+                className="text-sm font-semibold text-foreground/90"
               >
                 Wikipedia記事のURL
               </Label>
-              <div className="relative">
+              <div className="relative group">
                 <Input
                   id="url"
                   type="url"
@@ -61,23 +61,29 @@ export function UrlInputForm({
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   required
-                  className="h-12 px-4 text-base transition-all focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary"
+                  className="h-14 px-5 text-lg transition-all border-input/50 bg-background/50 focus:bg-background shadow-sm focus-visible:ring-2 focus-visible:ring-primary/20 focus-visible:border-primary group-hover:border-primary/50"
                   disabled={isLoading}
                 />
               </div>
             </div>
 
             {error && (
-              <Alert variant="destructive" className="animate-fade-in">
-                <AlertTitle>エラー</AlertTitle>
+              <Alert
+                variant="destructive"
+                className="animate-fade-in border-destructive/20 bg-destructive/5"
+              >
+                <AlertTitle className="font-semibold">
+                  エラーが発生しました
+                </AlertTitle>
                 <AlertDescription>{error}</AlertDescription>
               </Alert>
             )}
 
             <Button
               type="submit"
-              className="h-12 w-full text-base font-medium transition-all hover:translate-y-[-1px] hover:shadow-md"
+              className="h-14 w-full text-lg font-semibold transition-all hover:translate-y-[-2px] hover:shadow-lg hover:shadow-primary/20 active:translate-y-[0px]"
               disabled={isLoading}
+              size="lg"
             >
               {isLoading ? (
                 <>
