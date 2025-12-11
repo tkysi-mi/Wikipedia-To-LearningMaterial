@@ -80,10 +80,7 @@ ${articleText}`,
         .replace(/```json\n?/g, '')
         .replace(/```\n?/g, '')
         .trim();
-      console.log('Clean Content:', cleanContent); // Debug log
-
       const json = JSON.parse(cleanContent);
-      console.log('Parsed JSON keys:', Object.keys(json)); // Debug log
 
       // response_format: { type: 'json_object' } の場合、通常はルートオブジェクトが必要
       // プロンプトで配列を要求しても、{"questions": [...]} のようにラップされることがあるため柔軟に対応
